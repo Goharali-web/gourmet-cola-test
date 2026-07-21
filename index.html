@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gourmet Cola — The Ultimate Spark of Refreshment</title>
+  <meta name="description" content="Experience Gourmet Cola in stunning 3D. A masterclass in taste, carbonation, and luxury soda craftsmanship." />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <!-- Preloader Screen -->
+  <div id="preloader" class="preloader">
+    <div class="loader-content">
+      <div class="brand-logo-loader">
+        <span class="brand-sub">THE ART OF COLA</span>
+        <h1 class="brand-title">GOURMET COLA</h1>
+      </div>
+      <div class="loader-progress-box">
+        <div class="loader-bar-bg">
+          <div id="loader-bar" class="loader-bar"></div>
+        </div>
+        <div class="loader-info">
+          <span class="loader-status">Chilling 240 HD Frames...</span>
+          <span id="loader-percent" class="loader-percent">0%</span>
+        </div>
+      </div>
+      <div class="bouncing-bubbles">
+        <div class="bubble b1"></div>
+        <div class="bubble b2"></div>
+        <div class="bubble b3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background 3D Canvas -->
+  <canvas id="hero-canvas"></canvas>
+
+  <!-- Fixed Top Navigation -->
+  <header class="glass-header">
+    <a href="#" class="header-logo">
+      <span class="logo-accent">GOURMET</span> COLA
+    </a>
+    
+    <nav class="nav-links">
+      <a href="#hero" class="nav-link active">Home</a>
+      <a href="#crafting" class="nav-link">Crafting</a>
+      <a href="#chill" class="nav-link">Explosion</a>
+      <a href="#specs" class="nav-link">Specs</a>
+      <a href="#order" class="nav-link">Order</a>
+    </nav>
+
+    <div class="header-actions">
+      <button id="sound-btn" class="sound-toggle" title="Toggle Fizz Sound">
+        <svg class="sound-icon icon-off" viewBox="0 0 24 24" width="20" height="20">
+          <path fill="currentColor" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+        </svg>
+        <svg class="sound-icon icon-on hidden" viewBox="0 0 24 24" width="20" height="20">
+          <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+        </svg>
+        <span class="sound-text">Sound: OFF</span>
+      </button>
+
+      <button id="open-buy-modal" class="btn btn-primary">
+        Buy Now
+      </button>
+    </div>
+  </header>
+
+  <!-- Right Floating HUD Controls -->
+  <aside class="hud-sidebar">
+    <div class="frame-badge">
+      <span class="badge-label">FRAME</span>
+      <span id="frame-counter" class="badge-value">001</span>
+      <span class="badge-total">/ 240</span>
+    </div>
+    
+    <div class="scroll-tracker">
+      <div id="scroll-thumb" class="scroll-thumb"></div>
+    </div>
+    <span id="scroll-percentage" class="scroll-pct">0%</span>
+  </aside>
+
+  <!-- Scroll Container with Pinned Sections -->
+  <main class="scroll-container">
+    
+    <!-- Hero Section -->
+    <section id="hero" class="scroll-section hero-section">
+      <div class="section-content text-center">
+        <div class="badge-pill">
+          <span class="sparkle">✨</span> PREMIUM CARBONATED BEVERAGE
+        </div>
+        <h1 class="hero-title">
+          UNLEASH THE<br /><span class="text-gradient">REFRESHMENT</span>
+        </h1>
+        <p class="hero-description">
+          An unprecedented fusion of rich caramel, botanicals, and liquid velvet. Scroll down to experience the birth of perfection.
+        </p>
+        <div class="hero-cta-group">
+          <button class="btn btn-primary btn-lg" onclick="document.querySelector('#crafting').scrollIntoView({behavior: 'smooth'})">
+            Discover The Secret
+          </button>
+          <button class="btn btn-secondary btn-lg" onclick="openModal()">
+            Order Sample Pack
+          </button>
+        </div>
+        <div class="scroll-indicator">
+          <div class="mouse-icon">
+            <div class="wheel"></div>
+          </div>
+          <span>SCROLL TO UNLOCK</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Crafting Section -->
+    <section id="crafting" class="scroll-section crafting-section">
+      <div class="section-content layout-split">
+        <div class="card-glass content-card slide-in-left">
+          <span class="card-tag">01 / CRAFTSMANSHIP</span>
+          <h2>Crafted To Absolute Perfection</h2>
+          <p>
+            Every drop of Gourmet Cola is brewed using traditional copper kettles and 100% natural cane sugar, giving it a deeper, richer aroma than ordinary soft drinks.
+          </p>
+          <ul class="feature-list">
+            <li><span class="check-icon">✓</span> 100% Pure Natural Cane Sugar</li>
+            <li><span class="check-icon">✓</span> Micro-filtered Sparkling Spring Water</li>
+            <li><span class="check-icon">✓</span> Artisanal Botanical Spice Blend</li>
+          </ul>
+        </div>
+        <div class="stat-badge-box slide-in-right">
+          <div class="stat-circle">
+            <span class="stat-num">100%</span>
+            <span class="stat-lbl">AUTHENTIC TASTE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chill / Splash Explosion Section -->
+    <section id="chill" class="scroll-section chill-section">
+      <div class="section-content layout-right">
+        <div class="card-glass content-card slide-in-up">
+          <span class="card-tag">02 / THE CHILL EXPLOSION</span>
+          <h2>Sub-Zero Carbonation</h2>
+          <p>
+            Witness the intense burst of micro-carbonation. Engineered to hold crisp effervescence from the first pour to the very last sip.
+          </p>
+          <div class="metric-grid">
+            <div class="metric-item">
+              <span class="metric-val">2.8°C</span>
+              <span class="metric-lbl">Ideal Serve Temp</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-val">5.2 VOL</span>
+              <span class="metric-lbl">Carbonation Pressure</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-val">0</span>
+              <span class="metric-lbl">Artificial Preservatives</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specs & Stats Section -->
+    <section id="specs" class="scroll-section specs-section">
+      <div class="section-content layout-left">
+        <div class="card-glass content-card">
+          <span class="card-tag">03 / SIGNATURE FLAVOR PROFILE</span>
+          <h2>Bold. Refreshing. Unforgettable.</h2>
+          <p>
+            A complex symphony of vanilla bean accents, bright citrus notes, and signature cola spices that dance across your palate.
+          </p>
+          
+          <div class="flavor-bars">
+            <div class="flavor-bar-item">
+              <div class="bar-header">
+                <span>Crisp Carbonation</span>
+                <span>98%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width: 98%;"></div></div>
+            </div>
+            <div class="flavor-bar-item">
+              <div class="bar-header">
+                <span>Rich Caramel Balance</span>
+                <span>94%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width: 94%;"></div></div>
+            </div>
+            <div class="flavor-bar-item">
+              <div class="bar-header">
+                <span>Natural Spice Aroma</span>
+                <span>90%</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width: 90%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final Order CTA Section -->
+    <section id="order" class="scroll-section cta-section">
+      <div class="section-content text-center">
+        <div class="card-glass cta-card">
+          <span class="card-tag">TASTE THE EXTRAORDINARY</span>
+          <h2 class="cta-title">Ready For The Next Level Of Refreshment?</h2>
+          <p class="cta-desc">
+            Available in sleek 250ml cans, 500ml bottles, and luxury glass collector packs.
+          </p>
+          
+          <div class="cta-actions">
+            <button class="btn btn-primary btn-xl glow-effect" onclick="openModal()">
+              Get Gourmet Cola Now
+            </button>
+            <button class="btn btn-secondary btn-xl" onclick="openModal()">
+              Find Store Near You
+            </button>
+          </div>
+
+          <div class="newsletter-box">
+            <p>Join the VIP Tasting Club for exclusive drops & discounts</p>
+            <form id="newsletter-form" class="news-form" onsubmit="handleSubscribe(event)">
+              <input type="email" placeholder="Enter your email address" required class="news-input" />
+              <button type="submit" class="btn btn-primary">Join Club</button>
+            </form>
+            <div id="news-msg" class="news-msg hidden">✓ You're on the VIP list! Check your inbox soon.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Interactive Buy / Store Locator Modal -->
+  <div id="buy-modal" class="modal-backdrop hidden">
+    <div class="modal-card card-glass">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      
+      <div class="modal-header">
+        <h2>Order Gourmet Cola</h2>
+        <p>Select your favorite pack size and get it delivered icy-cold to your doorstep.</p>
+      </div>
+
+      <div class="pack-grid">
+        <div class="pack-option active">
+          <div class="pack-badge">MOST POPULAR</div>
+          <h3>6-Pack Glass Bottles</h3>
+          <p class="pack-size">500ml x 6</p>
+          <span class="pack-price">$14.99</span>
+          <button class="btn btn-primary btn-sm" onclick="selectPack('6-Pack')">Select</button>
+        </div>
+        
+        <div class="pack-option">
+          <h3>12-Pack Slim Cans</h3>
+          <p class="pack-size">330ml x 12</p>
+          <span class="pack-price">$22.99</span>
+          <button class="btn btn-secondary btn-sm" onclick="selectPack('12-Pack')">Select</button>
+        </div>
+
+        <div class="pack-option">
+          <div class="pack-badge gold">COLLECTOR EDITION</div>
+          <h3>Vintage Wooden Crate</h3>
+          <p class="pack-size">Limited Edition Crate</p>
+          <span class="pack-price">$49.99</span>
+          <button class="btn btn-secondary btn-sm" onclick="selectPack('Collector Crate')">Select</button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <p>🚚 Free Express Cold Delivery on orders over $30</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script type="module" src="/src/main.js"></script>
+
+</body>
+</html>
