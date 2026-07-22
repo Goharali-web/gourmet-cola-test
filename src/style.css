@@ -876,6 +876,153 @@ p {
 }
 
 /* ==========================================================================
+   ORDER FORM STYLES
+   ========================================================================== */
+
+/* Make pack cards fully clickable */
+.pack-option {
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+.pack-option:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 28px var(--color-accent-red-glow);
+  border-color: var(--color-accent-red);
+}
+.pack-option:hover .btn-secondary {
+  background: var(--color-accent-red);
+  border-color: var(--color-accent-red);
+  color: #fff;
+}
+
+/* Step badge + back link */
+.order-step-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+.order-step-badge span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-accent-gold);
+  background: rgba(247, 183, 49, 0.12);
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(247, 183, 49, 0.3);
+}
+.btn-text-link {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+.btn-text-link:hover {
+  color: var(--color-accent-red-bright);
+}
+
+/* Form layout */
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 1rem;
+  color: var(--text-white);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  width: 100%;
+  resize: none;
+}
+.form-group select option {
+  background: #1a1020;
+  color: var(--text-white);
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--color-accent-red);
+  box-shadow: 0 0 0 3px rgba(230, 0, 35, 0.18);
+}
+
+/* Error message */
+.form-error {
+  background: rgba(255, 80, 80, 0.1);
+  border: 1px solid rgba(255, 80, 80, 0.35);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  color: #ff8080;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* Success screen */
+.order-success {
+  text-align: center;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.success-icon {
+  font-size: 4rem;
+  animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes pop-in {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.order-success h2 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--text-white);
+}
+.order-success p {
+  color: var(--text-dim);
+  max-width: 340px;
+  line-height: 1.6;
+}
+
+
+
+/* ==========================================================================
    RESPONSIVE DESIGN
    ========================================================================== */
 
@@ -896,4 +1043,6 @@ p {
   .card-glass { padding: 1.75rem; }
   .hero-cta-group, .cta-actions { flex-direction: column; }
   .btn-lg, .btn-xl { width: 100%; }
+  .form-row { grid-template-columns: 1fr; }
 }
+
