@@ -241,7 +241,7 @@
 
   </main>
 
-  <!-- Site Footer with Creator Watermark -->
+  <!-- Site Footer with Creator Watermark & Footer-Only Admin Link -->
   <footer class="site-footer">
     <div class="footer-content">
       <p class="footer-copyright">© 2026 Gourmet Cola — Pure Refreshment</p>
@@ -251,6 +251,9 @@
         <span>by</span>
         <span class="creator-name">Ghazanfar</span>
       </div>
+      <a href="javascript:void(0)" id="open-admin-link" class="footer-admin-link">
+        <span class="lock-icon">🔒</span> Admin Portal
+      </a>
     </div>
   </footer>
 
@@ -380,6 +383,179 @@
         <h2>Order Placed Successfully!</h2>
         <p id="success-detail">Your Gourmet Cola is on its way. We'll send a confirmation shortly.</p>
         <button class="btn btn-primary btn-lg" onclick="closeModal()">Close</button>
+      </div>
+
+  <!-- Interactive Admin Portal Modal -->
+  <div id="admin-modal" class="modal-backdrop hidden">
+    <div class="modal-card card-glass admin-modal-card">
+      <button class="modal-close" id="close-admin-modal-btn">×</button>
+
+      <!-- Slot status badge header -->
+      <div class="admin-slot-header">
+        <div id="admin-slot-badge" class="admin-slot-badge slot-available">
+          <span id="admin-slot-text">🟢 1 Slot Available — Register Admin Account</span>
+        </div>
+      </div>
+
+      <!-- VIEW 1: AUTHENTICATION (LOGIN / SINGLE SLOT SIGNUP) -->
+      <div id="admin-auth-view">
+        <div class="admin-auth-tabs">
+          <button id="tab-login-btn" class="auth-tab-btn active">🔑 Admin Login</button>
+          <button id="tab-signup-btn" class="auth-tab-btn">✨ Create Admin Account (1 Slot)</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="admin-login-tab" class="auth-tab-content">
+          <div class="modal-header">
+            <h2>Admin Portal Sign In</h2>
+            <p>Access customer bookings, order status tracking, and revenue overview.</p>
+          </div>
+          <form id="admin-login-form" class="order-form">
+            <div class="form-group">
+              <label for="admin-login-email">Email Address or Username</label>
+              <input type="text" id="admin-login-email" placeholder="admin@gourmetcola.com" required />
+            </div>
+            <div class="form-group">
+              <label for="admin-login-password">Password</label>
+              <input type="password" id="admin-login-password" placeholder="••••••••" required />
+            </div>
+            <button type="submit" class="btn btn-primary btn-xl glow-effect" id="admin-login-submit">
+              <span>🚀 Log In to Admin Dashboard</span>
+            </button>
+          </form>
+          <div id="admin-login-error" class="form-error hidden"></div>
+        </div>
+
+        <!-- SIGNUP FORM (SINGLE SLOT) -->
+        <div id="admin-signup-tab" class="auth-tab-content hidden">
+          <div class="modal-header">
+            <h2>Create Admin Account</h2>
+            <p><strong>1 Slot Available:</strong> Register your master admin account. After creation, registration locks permanently.</p>
+          </div>
+          
+          <div id="admin-slot-locked-notice" class="slot-locked-box hidden">
+            <div class="lock-big-icon">🔒</div>
+            <h3>Admin Slot Filled (1/1 Registered)</h3>
+            <p>An admin account has already been registered on this system. Further account creation is permanently disabled.</p>
+            <button type="button" class="btn btn-secondary btn-sm" id="switch-to-login-btn">Switch to Admin Sign In</button>
+          </div>
+
+          <form id="admin-signup-form" class="order-form">
+            <div class="form-group">
+              <label for="admin-signup-name">Full Name *</label>
+              <input type="text" id="admin-signup-name" placeholder="Admin Full Name" required />
+            </div>
+            <div class="form-group">
+              <label for="admin-signup-email">Admin Email Address *</label>
+              <input type="email" id="admin-signup-email" placeholder="admin@gourmetcola.com" required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="admin-signup-pass">Master Password *</label>
+                <input type="password" id="admin-signup-pass" placeholder="At least 6 characters" minlength="6" required />
+              </div>
+              <div class="form-group">
+                <label for="admin-signup-confirm">Confirm Password *</label>
+                <input type="password" id="admin-signup-confirm" placeholder="Confirm password" minlength="6" required />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-xl glow-effect" id="admin-signup-submit">
+              <span>🛡️ Register & Claim Admin Slot</span>
+            </button>
+          </form>
+          <div id="admin-signup-error" class="form-error hidden"></div>
+        </div>
+      </div>
+
+      <!-- VIEW 2: DASHBOARD (BOOKINGS & STATS) -->
+      <div id="admin-dashboard-view" class="hidden">
+        <!-- Top bar -->
+        <div class="admin-dash-topbar">
+          <div class="dash-user-info">
+            <span class="user-avatar">👑</span>
+            <div>
+              <h3 id="dash-admin-name">Admin Dashboard</h3>
+              <p id="dash-admin-email" class="sub-text">admin@gourmetcola.com</p>
+            </div>
+          </div>
+          <div class="dash-actions">
+            <button class="btn btn-secondary btn-sm" id="admin-refresh-btn" title="Refresh Bookings">
+              🔄 Refresh Data
+            </button>
+            <button class="btn btn-danger btn-sm" id="admin-logout-btn">
+              🚪 Logout
+            </button>
+          </div>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="admin-metrics-grid">
+          <div class="metric-card gold-glow">
+            <span class="metric-card-lbl">Total Bookings</span>
+            <span class="metric-card-val" id="metric-total-orders">0</span>
+            <span class="metric-card-sub">All-time customer orders</span>
+          </div>
+          <div class="metric-card green-glow">
+            <span class="metric-card-lbl">Total Revenue</span>
+            <span class="metric-card-val" id="metric-total-revenue">Rs. 0</span>
+            <span class="metric-card-sub">Gross booking value</span>
+          </div>
+          <div class="metric-card amber-glow">
+            <span class="metric-card-lbl">Pending Bookings</span>
+            <span class="metric-card-val" id="metric-pending-orders">0</span>
+            <span class="metric-card-sub">Awaiting dispatch</span>
+          </div>
+          <div class="metric-card blue-glow">
+            <span class="metric-card-lbl">Completed</span>
+            <span class="metric-card-val" id="metric-completed-orders">0</span>
+            <span class="metric-card-sub">Delivered orders</span>
+          </div>
+        </div>
+
+        <!-- Filter & Search Controls -->
+        <div class="admin-table-controls">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="admin-search-input" placeholder="Search by name, email, phone, city, or pack..." />
+          </div>
+          <div class="filter-group">
+            <select id="admin-status-filter" class="status-select-filter">
+              <option value="ALL">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="Processing">Processing</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" id="admin-export-csv">
+              📥 Export CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Bookings Table Container -->
+        <div class="admin-table-wrapper">
+          <table class="admin-orders-table">
+            <thead>
+              <tr>
+                <th>Booking Details</th>
+                <th>Customer Info</th>
+                <th>Delivery Address</th>
+                <th>Pack & Qty</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Update Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+          <div id="admin-table-empty" class="table-empty-state hidden">
+            <div class="empty-icon">📦</div>
+            <p id="empty-state-text">No bookings found yet. Placed orders will appear here in real time.</p>
+          </div>
+        </div>
+
       </div>
 
     </div>
