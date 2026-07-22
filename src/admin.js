@@ -102,6 +102,11 @@ export function closeAdminModal() {
   if (modal) modal.classList.add('hidden');
 }
 
+// Global window bindings
+window.openAdminModal = openAdminModal;
+window.closeAdminModal = closeAdminModal;
+window.switchAdminTab = switchTab;
+
 async function updateSlotStatusUI() {
   const badge = document.getElementById('admin-slot-badge');
   const badgeText = document.getElementById('admin-slot-text');
