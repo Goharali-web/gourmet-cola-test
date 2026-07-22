@@ -2,6 +2,15 @@
    GOURMET COLA 3D CANVAS & INTERACTIVE SCROLL ENGINE
    ========================================================================== */
 
+import { saveOrder, saveNewsletterSubscriber } from './supabase.js';
+
+// Selected pack state for multi-step order form
+let selectedPack = {
+  label: '',
+  price: 0,
+  type: ''
+};
+
 const TOTAL_FRAMES = 240;
 const frames = [];
 const frameState = {
@@ -247,27 +256,123 @@ function toggleSound() {
 
 window.openModal = function() {
   const modal = document.getElementById('buy-modal');
-  if (modal) modal.classList.remove('hidden');
+  if (modal) {
+    modal.classList.remove('hidden');
+    // Always start at step 1 when opening fresh
+    showModalStep(1);
+  }
 };
 
 window.closeModal = function() {
   const modal = document.getElementById('buy-modal');
   if (modal) modal.classList.add('hidden');
+  // Reset form
+  const form = document.getElementById('order-form');
+  if (form) form.reset();
+  const errMsg = document.getElementById('order-error-msg');
+  if (errMsg) errMsg.classList.add('hidden');
 };
 
-window.selectPack = function(packName) {
-  alert(`🛒 Selected: ${packName}. Redirecting to instant checkout...`);
-  closeModal();
+function showModalStep(step) {
+  [1, 2, 3].forEach(n => {
+    const el = document.getElementById(`modal-step-${n}`);
+    if (el) el.classList.toggle('hidden', n !== step);
+  });
+}
+
+// Called when user clicks a pack option card
+window.choosePack = function(label, price, type) {
+  selectedPack = { label, price, type };
+  const packLabel = document.getElementById('selected-pack-label');
+  if (packLabel) packLabel.textContent = `${label} — $${price.toFixed(2)}`;
+  showModalStep(2);
 };
 
-window.handleSubscribe = function(e) {
+window.goBackToPacks = function() {
+  showModalStep(1);
+};
+
+// Handle Order Form Submission → Supabase
+window.handleOrderSubmit = async function(e) {
   e.preventDefault();
-  const msg = document.getElementById('news-msg');
-  if (msg) {
+
+  const submitBtn = document.getElementById('order-submit-btn');
+  const btnText   = document.getElementById('order-btn-text');
+  const btnLoad   = document.getElementById('order-btn-loading');
+  const errMsg    = document.getElementById('order-error-msg');
+
+  // Loading state
+  submitBtn.disabled = true;
+  btnText.classList.add('hidden');
+  btnLoad.classList.remove('hidden');
+  errMsg.classList.add('hidden');
+
+  try {
+    const orderData = {
+      fullName:  document.getElementById('order-name').value.trim(),
+      email:     document.getElementById('order-email').value.trim(),
+      phone:     document.getElementById('order-phone').value.trim(),
+      address:   document.getElementById('order-address').value.trim(),
+      city:      document.getElementById('order-city').value.trim(),
+      packType:  selectedPack.type,
+      packPrice: selectedPack.price,
+      quantity:  parseInt(document.getElementById('order-qty').value, 10),
+      notes:     document.getElementById('order-notes').value.trim(),
+    };
+
+    await saveOrder(orderData);
+
+    // Show success step
+    const detail = document.getElementById('success-detail');
+    if (detail) {
+      detail.textContent = `Your ${selectedPack.label} order has been placed! We'll confirm to ${orderData.email} shortly. 🥤`;
+    }
+    showModalStep(3);
+
+  } catch (err) {
+    console.error('Order submission error:', err);
+    errMsg.textContent = `⚠️ Could not place your order: ${err.message || 'Please try again.'}. Check your connection or contact us.`;
+    errMsg.classList.remove('hidden');
+  } finally {
+    submitBtn.disabled = false;
+    btnText.classList.remove('hidden');
+    btnLoad.classList.add('hidden');
+  }
+};
+
+// Handle Newsletter Subscription → Supabase
+window.handleSubscribe = async function(e) {
+  e.preventDefault();
+  const form     = e.target;
+  const emailEl  = form.querySelector('input[type="email"]');
+  const msg      = document.getElementById('news-msg');
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  if (!emailEl || !msg) return;
+
+  const email = emailEl.value.trim();
+  submitBtn.disabled = true;
+  submitBtn.textContent = '...';
+
+  try {
+    const result = await saveNewsletterSubscriber(email);
+    if (result && result.duplicate) {
+      msg.textContent = '✓ You\'re already on the VIP list!';
+    } else {
+      msg.textContent = '✓ You\'re on the VIP list! Check your inbox soon.';
+    }
     msg.classList.remove('hidden');
-    setTimeout(() => {
-      msg.classList.add('hidden');
-    }, 4000);
+    emailEl.value = '';
+    setTimeout(() => msg.classList.add('hidden'), 5000);
+  } catch (err) {
+    console.error('Newsletter error:', err);
+    msg.textContent = `⚠️ Subscription failed: ${err.message || 'Please try again.'}`;
+    msg.style.color = '#ff6b6b';
+    msg.classList.remove('hidden');
+    setTimeout(() => { msg.classList.add('hidden'); msg.style.color = ''; }, 5000);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Join Club';
   }
 };
 
