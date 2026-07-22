@@ -77,6 +77,9 @@ export function initAdminPortal() {
 
   // Initial slot check
   updateSlotStatusUI();
+
+  // Open modal automatically if URL contains #admin
+  checkHashAndOpenAdmin();
 }
 
 /* --------------------------------------------------------------------------
@@ -100,7 +103,19 @@ export async function openAdminModal() {
 export function closeAdminModal() {
   const modal = document.getElementById('admin-modal');
   if (modal) modal.classList.add('hidden');
+  if (window.location.hash === '#admin') {
+    history.pushState('', document.title, window.location.pathname + window.location.search);
+  }
 }
+
+function checkHashAndOpenAdmin() {
+  if (window.location.hash === '#admin') {
+    openAdminModal();
+  }
+}
+
+// Listen for hash changes (e.g. navigation or new tab with #admin)
+window.addEventListener('hashchange', checkHashAndOpenAdmin);
 
 // Global window bindings
 window.openAdminModal = openAdminModal;
