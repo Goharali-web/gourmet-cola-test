@@ -241,6 +241,19 @@
 
   </main>
 
+  <!-- Site Footer with Creator Watermark -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p class="footer-copyright">© 2026 Gourmet Cola — Pure Refreshment</p>
+      <div class="creator-watermark">
+        <span>Crafted with</span>
+        <span class="heart-icon">♥</span>
+        <span>by</span>
+        <span class="creator-name">Ghazanfar</span>
+      </div>
+    </div>
+  </footer>
+
   <!-- Interactive Buy / Order Modal -->
   <div id="buy-modal" class="modal-backdrop hidden">
     <div class="modal-card card-glass">
@@ -250,36 +263,50 @@
       <div id="modal-step-1">
         <div class="modal-header">
           <h2>Order Gourmet Cola</h2>
-          <p>Select your favorite pack size and get it delivered icy-cold to your doorstep.</p>
+          <p>Select your favorite bottle size or bundle pack and get it delivered icy-cold.</p>
         </div>
 
-        <div class="pack-grid">
-          <div class="pack-option" id="pack-6" onclick="choosePack('6-Pack Glass Bottles', 14.99, '6-Pack')">
-            <div class="pack-badge">MOST POPULAR</div>
-            <h3>6-Pack Glass Bottles</h3>
-            <p class="pack-size">500ml x 6</p>
-            <span class="pack-price">$14.99</span>
-            <button class="btn btn-primary btn-sm">Select</button>
-          </div>
-          
-          <div class="pack-option" id="pack-12" onclick="choosePack('12-Pack Slim Cans', 22.99, '12-Pack')">
-            <h3>12-Pack Slim Cans</h3>
-            <p class="pack-size">330ml x 12</p>
-            <span class="pack-price">$22.99</span>
+        <div class="pack-grid pack-grid-5">
+          <div class="pack-option" onclick="choosePack('300ml Bottle', 50, '300ml-single')">
+            <h3>300ml Bottle</h3>
+            <p class="pack-size">Single Serving</p>
+            <span class="pack-price">Rs. 50</span>
             <button class="btn btn-secondary btn-sm">Select</button>
           </div>
 
-          <div class="pack-option" id="pack-crate" onclick="choosePack('Vintage Wooden Crate', 49.99, 'Collector Crate')">
-            <div class="pack-badge gold">COLLECTOR EDITION</div>
-            <h3>Vintage Wooden Crate</h3>
-            <p class="pack-size">Limited Edition Crate</p>
-            <span class="pack-price">$49.99</span>
+          <div class="pack-option" onclick="choosePack('500ml Bottle', 60, '500ml-single')">
+            <h3>500ml Bottle</h3>
+            <p class="pack-size">Standard Bottle</p>
+            <span class="pack-price">Rs. 60</span>
             <button class="btn btn-secondary btn-sm">Select</button>
+          </div>
+
+          <div class="pack-option" onclick="choosePack('1L Bottle', 103, '1l-single')">
+            <h3>1L Bottle</h3>
+            <p class="pack-size">Family Size</p>
+            <span class="pack-price">Rs. 103</span>
+            <button class="btn btn-secondary btn-sm">Select</button>
+          </div>
+          
+          <div class="pack-option active-glow" onclick="choosePack('500ml Bottle x 12 Pack', 899, '500ml-12pack')">
+            <div class="pack-badge">BEST VALUE</div>
+            <h3>500ml x 12 Pack</h3>
+            <p class="pack-size">12 Bottles (≈Rs. 75/bottle)</p>
+            <span class="pack-price">Rs. 899</span>
+            <button class="btn btn-primary btn-sm">Select</button>
+          </div>
+
+          <div class="pack-option" onclick="choosePack('1.5L Bottle x 6 Pack', 773, '1.5l-6pack')">
+            <div class="pack-badge gold">PARTY PACK</div>
+            <h3>1.5L x 6 Pack</h3>
+            <p class="pack-size">6 Large Bottles (≈Rs. 129/bottle)</p>
+            <span class="pack-price">Rs. 773</span>
+            <button class="btn btn-primary btn-sm">Select</button>
           </div>
         </div>
 
         <div class="modal-footer">
-          <p>🚚 Free Express Cold Delivery on orders over $30</p>
+          <p>🚚 Free Express Cold Delivery on orders over Rs. 1,000</p>
         </div>
       </div>
 
@@ -287,11 +314,11 @@
       <div id="modal-step-2" class="hidden">
         <div class="modal-header">
           <div class="order-step-badge">
-            <span id="selected-pack-label">6-Pack Glass Bottles</span>
-            <button class="btn-text-link" onclick="goBackToPacks()">← Change Pack</button>
+            <span id="selected-pack-label">500ml Bottle x 12 Pack — Rs. 899</span>
+            <button class="btn-text-link" onclick="goBackToPacks()">← Change Selection</button>
           </div>
           <h2>Your Delivery Details</h2>
-          <p>Fill in your info and we'll ship Gourmet Cola straight to you.</p>
+          <p>Fill in your info and we'll ship Gourmet Cola straight to your doorstep.</p>
         </div>
 
         <form id="order-form" class="order-form" onsubmit="handleOrderSubmit(event)">
@@ -309,37 +336,37 @@
           <div class="form-row">
             <div class="form-group">
               <label for="order-phone">Phone Number *</label>
-              <input type="tel" id="order-phone" placeholder="+1 (555) 000-0000" required />
+              <input type="tel" id="order-phone" placeholder="0300-1234567" required />
             </div>
             <div class="form-group">
               <label for="order-qty">Quantity *</label>
               <select id="order-qty" required>
-                <option value="1">1 Pack</option>
-                <option value="2">2 Packs</option>
-                <option value="3">3 Packs</option>
-                <option value="5">5 Packs</option>
-                <option value="10">10 Packs</option>
+                <option value="1">1 Unit / Pack</option>
+                <option value="2">2 Units / Packs</option>
+                <option value="3">3 Units / Packs</option>
+                <option value="5">5 Units / Packs</option>
+                <option value="10">10 Units / Packs</option>
               </select>
             </div>
           </div>
 
           <div class="form-group">
             <label for="order-address">Delivery Address *</label>
-            <input type="text" id="order-address" placeholder="123 Main Street, Apt 4B" required />
+            <input type="text" id="order-address" placeholder="House #, Street Address, Area" required />
           </div>
 
           <div class="form-group">
-            <label for="order-city">City / State / Zip *</label>
-            <input type="text" id="order-city" placeholder="New York, NY 10001" required />
+            <label for="order-city">City / Location *</label>
+            <input type="text" id="order-city" placeholder="Lahore, Karachi, Islamabad, etc." required />
           </div>
 
           <div class="form-group">
-            <label for="order-notes">Special Notes (optional)</label>
+            <label for="order-notes">Special Instructions (optional)</label>
             <textarea id="order-notes" placeholder="Any special delivery instructions..." rows="2"></textarea>
           </div>
 
           <button type="submit" class="btn btn-primary btn-xl glow-effect" id="order-submit-btn">
-            <span id="order-btn-text">🛒 Place My Order</span>
+            <span id="order-btn-text">🛒 Confirm & Place Order</span>
             <span id="order-btn-loading" class="hidden">⏳ Submitting...</span>
           </button>
         </form>
@@ -351,7 +378,7 @@
       <div id="modal-step-3" class="hidden order-success">
         <div class="success-icon">🎉</div>
         <h2>Order Placed Successfully!</h2>
-        <p id="success-detail">Your Gourmet Cola is on its way. We'll send a confirmation to your email shortly.</p>
+        <p id="success-detail">Your Gourmet Cola is on its way. We'll send a confirmation shortly.</p>
         <button class="btn btn-primary btn-lg" onclick="closeModal()">Close</button>
       </div>
 
