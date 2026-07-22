@@ -241,44 +241,120 @@
 
   </main>
 
-  <!-- Interactive Buy / Store Locator Modal -->
+  <!-- Interactive Buy / Order Modal -->
   <div id="buy-modal" class="modal-backdrop hidden">
     <div class="modal-card card-glass">
       <button class="modal-close" onclick="closeModal()">×</button>
-      
-      <div class="modal-header">
-        <h2>Order Gourmet Cola</h2>
-        <p>Select your favorite pack size and get it delivered icy-cold to your doorstep.</p>
-      </div>
 
-      <div class="pack-grid">
-        <div class="pack-option active">
-          <div class="pack-badge">MOST POPULAR</div>
-          <h3>6-Pack Glass Bottles</h3>
-          <p class="pack-size">500ml x 6</p>
-          <span class="pack-price">$14.99</span>
-          <button class="btn btn-primary btn-sm" onclick="selectPack('6-Pack')">Select</button>
-        </div>
-        
-        <div class="pack-option">
-          <h3>12-Pack Slim Cans</h3>
-          <p class="pack-size">330ml x 12</p>
-          <span class="pack-price">$22.99</span>
-          <button class="btn btn-secondary btn-sm" onclick="selectPack('12-Pack')">Select</button>
+      <!-- Step 1: Pack Selection -->
+      <div id="modal-step-1">
+        <div class="modal-header">
+          <h2>Order Gourmet Cola</h2>
+          <p>Select your favorite pack size and get it delivered icy-cold to your doorstep.</p>
         </div>
 
-        <div class="pack-option">
-          <div class="pack-badge gold">COLLECTOR EDITION</div>
-          <h3>Vintage Wooden Crate</h3>
-          <p class="pack-size">Limited Edition Crate</p>
-          <span class="pack-price">$49.99</span>
-          <button class="btn btn-secondary btn-sm" onclick="selectPack('Collector Crate')">Select</button>
+        <div class="pack-grid">
+          <div class="pack-option" id="pack-6" onclick="choosePack('6-Pack Glass Bottles', 14.99, '6-Pack')">
+            <div class="pack-badge">MOST POPULAR</div>
+            <h3>6-Pack Glass Bottles</h3>
+            <p class="pack-size">500ml x 6</p>
+            <span class="pack-price">$14.99</span>
+            <button class="btn btn-primary btn-sm">Select</button>
+          </div>
+          
+          <div class="pack-option" id="pack-12" onclick="choosePack('12-Pack Slim Cans', 22.99, '12-Pack')">
+            <h3>12-Pack Slim Cans</h3>
+            <p class="pack-size">330ml x 12</p>
+            <span class="pack-price">$22.99</span>
+            <button class="btn btn-secondary btn-sm">Select</button>
+          </div>
+
+          <div class="pack-option" id="pack-crate" onclick="choosePack('Vintage Wooden Crate', 49.99, 'Collector Crate')">
+            <div class="pack-badge gold">COLLECTOR EDITION</div>
+            <h3>Vintage Wooden Crate</h3>
+            <p class="pack-size">Limited Edition Crate</p>
+            <span class="pack-price">$49.99</span>
+            <button class="btn btn-secondary btn-sm">Select</button>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <p>🚚 Free Express Cold Delivery on orders over $30</p>
         </div>
       </div>
 
-      <div class="modal-footer">
-        <p>🚚 Free Express Cold Delivery on orders over $30</p>
+      <!-- Step 2: Order Details Form -->
+      <div id="modal-step-2" class="hidden">
+        <div class="modal-header">
+          <div class="order-step-badge">
+            <span id="selected-pack-label">6-Pack Glass Bottles</span>
+            <button class="btn-text-link" onclick="goBackToPacks()">← Change Pack</button>
+          </div>
+          <h2>Your Delivery Details</h2>
+          <p>Fill in your info and we'll ship Gourmet Cola straight to you.</p>
+        </div>
+
+        <form id="order-form" class="order-form" onsubmit="handleOrderSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="order-name">Full Name *</label>
+              <input type="text" id="order-name" placeholder="John Doe" required />
+            </div>
+            <div class="form-group">
+              <label for="order-email">Email Address *</label>
+              <input type="email" id="order-email" placeholder="john@example.com" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="order-phone">Phone Number *</label>
+              <input type="tel" id="order-phone" placeholder="+1 (555) 000-0000" required />
+            </div>
+            <div class="form-group">
+              <label for="order-qty">Quantity *</label>
+              <select id="order-qty" required>
+                <option value="1">1 Pack</option>
+                <option value="2">2 Packs</option>
+                <option value="3">3 Packs</option>
+                <option value="5">5 Packs</option>
+                <option value="10">10 Packs</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="order-address">Delivery Address *</label>
+            <input type="text" id="order-address" placeholder="123 Main Street, Apt 4B" required />
+          </div>
+
+          <div class="form-group">
+            <label for="order-city">City / State / Zip *</label>
+            <input type="text" id="order-city" placeholder="New York, NY 10001" required />
+          </div>
+
+          <div class="form-group">
+            <label for="order-notes">Special Notes (optional)</label>
+            <textarea id="order-notes" placeholder="Any special delivery instructions..." rows="2"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-xl glow-effect" id="order-submit-btn">
+            <span id="order-btn-text">🛒 Place My Order</span>
+            <span id="order-btn-loading" class="hidden">⏳ Submitting...</span>
+          </button>
+        </form>
+
+        <div id="order-error-msg" class="form-error hidden"></div>
       </div>
+
+      <!-- Step 3: Success Screen -->
+      <div id="modal-step-3" class="hidden order-success">
+        <div class="success-icon">🎉</div>
+        <h2>Order Placed Successfully!</h2>
+        <p id="success-detail">Your Gourmet Cola is on its way. We'll send a confirmation to your email shortly.</p>
+        <button class="btn btn-primary btn-lg" onclick="closeModal()">Close</button>
+      </div>
+
     </div>
   </div>
 
