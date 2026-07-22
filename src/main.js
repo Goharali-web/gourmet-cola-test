@@ -284,7 +284,7 @@ function showModalStep(step) {
 window.choosePack = function(label, price, type) {
   selectedPack = { label, price, type };
   const packLabel = document.getElementById('selected-pack-label');
-  if (packLabel) packLabel.textContent = `${label} — $${price.toFixed(2)}`;
+  if (packLabel) packLabel.textContent = `${label} — Rs. ${price}`;
   showModalStep(2);
 };
 
