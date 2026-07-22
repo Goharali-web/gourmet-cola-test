@@ -3,6 +3,7 @@
    ========================================================================== */
 
 import { saveOrder, saveNewsletterSubscriber } from './supabase.js';
+import { initAdminPortal } from './admin.js';
 
 // Selected pack state for multi-step order form
 let selectedPack = {
@@ -397,6 +398,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (e.target === modalBackdrop) closeModal();
     });
   }
+
+  // Initialize Admin Portal Engine
+  initAdminPortal();
 
   // Preload frames & start render loop
   await preloadFrames();
