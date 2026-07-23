@@ -18,6 +18,7 @@ let slotIsOccupied = false;
    INITIALIZATION & EVENT BINDINGS
    -------------------------------------------------------------------------- */
 export function initAdminPortal() {
+  // Hidden trigger is the 'Ghazanfar' watermark text
   const openLink = document.getElementById('open-admin-link');
   const closeBtn = document.getElementById('close-admin-modal-btn');
   const modal = document.getElementById('admin-modal');
@@ -75,11 +76,11 @@ export function initAdminPortal() {
     }
   }
 
-  // Initial slot check
-  updateSlotStatusUI();
-
-  // Open modal automatically if URL contains #admin
-  checkHashAndOpenAdmin();
+  // Auto-seed admin credentials & check slot
+  seedAdminAccount().then(() => {
+    updateSlotStatusUI();
+    checkHashAndOpenAdmin();
+  });
 }
 
 /* --------------------------------------------------------------------------
@@ -121,6 +122,26 @@ window.addEventListener('hashchange', checkHashAndOpenAdmin);
 window.openAdminModal = openAdminModal;
 window.closeAdminModal = closeAdminModal;
 window.switchAdminTab = switchTab;
+
+/* --------------------------------------------------------------------------
+   SEED ADMIN ACCOUNT — Pre-register fixed credentials on first load
+   -------------------------------------------------------------------------- */
+async function seedAdminAccount() {
+  const ADMIN_EMAIL = 'ga480926@gmail.com';
+  const ADMIN_PASS  = 'fmdesWM%?+c9gng';
+  const ADMIN_NAME  = 'Ghazanfar';
+
+  try {
+    const status = await checkAdminSlotStatus();
+    if (!status.exists) {
+      await registerAdminSlot({ name: ADMIN_NAME, email: ADMIN_EMAIL, password: ADMIN_PASS });
+      console.log('[Admin] Master account seeded.');
+    }
+  } catch (err) {
+    // Already seeded or table not ready — ignore silently
+    console.warn('[Admin] Seed skipped:', err.message);
+  }
+}
 
 async function updateSlotStatusUI() {
   const badge = document.getElementById('admin-slot-badge');
@@ -400,15 +421,10 @@ function renderFilteredOrdersTable() {
   if (emptyState) emptyState.classList.add('hidden');
 
   filtered.forEach(o => {
-    const tr = document.createElement('tr');
-
     const formattedDate = o.created_at
-      ? new Date(o.created_at).toLocaleString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
+      ? new Date(o.created_at).toLocaleString('en-GB', {
+          day: '2-digit', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
         })
       : 'N/A';
 
@@ -416,55 +432,58 @@ function renderFilteredOrdersTable() {
     const packPrice = parseFloat(o.pack_price || 0);
     const totalPrice = qty * packPrice;
     const currentStatus = o.status || 'Pending';
-
     const statusBadgeClass = `status-badge badge-${currentStatus.toLowerCase()}`;
 
-    tr.innerHTML = `
-      <td>
-        <span class="order-id-code">#${(o.id || '').substring(0, 12)}</span>
-        <span class="order-date-time">📅 ${formattedDate}</span>
-      </td>
-      <td>
-        <span class="cust-name">👤 ${escapeHtml(o.full_name || 'N/A')}</span>
-        <span class="cust-email">✉️ ${escapeHtml(o.email || 'N/A')}</span>
-        <span class="cust-phone">📞 ${escapeHtml(o.phone || 'N/A')}</span>
-      </td>
-      <td>
-        <span class="cust-name">📍 ${escapeHtml(o.city || 'N/A')}</span>
-        <span class="cust-email">${escapeHtml(o.address || 'N/A')}</span>
-        ${o.notes ? `<span class="cust-phone">📝 <em>${escapeHtml(o.notes)}</em></span>` : ''}
-      </td>
-      <td>
-        <span class="cust-name">${escapeHtml(o.pack_type || 'Pack')}</span>
-        <span class="cust-email">Qty: ${qty} unit(s)</span>
-      </td>
-      <td>
-        <span class="cust-name" style="color: #ffd700;">Rs. ${totalPrice.toLocaleString()}</span>
-        <span class="cust-email">(Rs. ${packPrice}/unit)</span>
-      </td>
-      <td>
-        <span class="${statusBadgeClass}" id="badge-${o.id}">${currentStatus}</span>
-      </td>
-      <td>
-        <select class="status-inline-select" data-order-id="${o.id}">
-          <option value="Pending" ${currentStatus === 'Pending' ? 'selected' : ''}>Pending</option>
-          <option value="Processing" ${currentStatus === 'Processing' ? 'selected' : ''}>Processing</option>
-          <option value="Completed" ${currentStatus === 'Completed' ? 'selected' : ''}>Completed</option>
-          <option value="Cancelled" ${currentStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-        </select>
-      </td>
+    const card = document.createElement('div');
+    card.className = 'order-admin-card';
+    card.innerHTML = `
+      <div class="oac-header">
+        <div class="oac-id-date">
+          <span class="order-id-code">#${String(o.id || '').substring(0, 14)}</span>
+          <span class="order-date-time">📅 ${formattedDate}</span>
+        </div>
+        <div class="oac-status-block">
+          <span class="${statusBadgeClass}">${currentStatus}</span>
+          <select class="status-inline-select" data-order-id="${o.id}">
+            <option value="Pending" ${currentStatus === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+            <option value="Processing" ${currentStatus === 'Processing' ? 'selected' : ''}>🔄 Processing</option>
+            <option value="Completed" ${currentStatus === 'Completed' ? 'selected' : ''}>✅ Completed</option>
+            <option value="Cancelled" ${currentStatus === 'Cancelled' ? 'selected' : ''}>❌ Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="oac-body">
+        <div class="oac-section">
+          <div class="oac-label">👤 Customer</div>
+          <div class="oac-value oac-name">${escapeHtml(o.full_name || 'N/A')}</div>
+          <div class="oac-value">✉️ ${escapeHtml(o.email || 'N/A')}</div>
+          <div class="oac-value">📞 ${escapeHtml(o.phone || 'N/A')}</div>
+        </div>
+        <div class="oac-section">
+          <div class="oac-label">📍 Delivery</div>
+          <div class="oac-value oac-name">${escapeHtml(o.city || 'N/A')}</div>
+          <div class="oac-value">${escapeHtml(o.address || 'N/A')}</div>
+          ${o.notes ? `<div class="oac-value oac-notes">📝 ${escapeHtml(o.notes)}</div>` : ''}
+        </div>
+        <div class="oac-section">
+          <div class="oac-label">🥤 Order</div>
+          <div class="oac-value oac-name">${escapeHtml(o.pack_type || 'Pack')}</div>
+          <div class="oac-value">Qty: ${qty} unit(s)</div>
+          <div class="oac-value oac-price">Rs. ${totalPrice.toLocaleString()}</div>
+          <div class="oac-value" style="font-size:0.75rem;opacity:0.6">(Rs. ${packPrice}/unit)</div>
+        </div>
+      </div>
     `;
 
-    // Bind inline status change event
-    const statusSelect = tr.querySelector('.status-inline-select');
-    if (statusSelect) {
-      statusSelect.addEventListener('change', async (e) => {
-        const newSt = e.target.value;
-        await handleStatusChange(o.id, newSt);
+    // Bind status select
+    const sel = card.querySelector('.status-inline-select');
+    if (sel) {
+      sel.addEventListener('change', async (e) => {
+        await handleStatusChange(o.id, e.target.value);
       });
     }
 
-    tbody.appendChild(tr);
+    tbody.appendChild(card);
   });
 }
 
