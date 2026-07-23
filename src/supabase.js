@@ -14,56 +14,65 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
    saveOrder — Inserts an order record into the `orders` table
    -------------------------------------------------------------------------- */
 export async function saveOrder(orderData) {
+  const localId = 'ord_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+  const now = new Date().toISOString();
+
   const newOrder = {
-    id: 'ord_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
-    full_name:    orderData.fullName,
-    email:        orderData.email,
-    phone:        orderData.phone,
-    address:      orderData.address,
-    city:         orderData.city,
-    pack_type:    orderData.packType,
-    pack_price:   orderData.packPrice,
-    quantity:     orderData.quantity,
-    notes:        orderData.notes || null,
-    status:       'Pending',
-    created_at:   new Date().toISOString(),
+    id:         localId,
+    full_name:  orderData.fullName,
+    email:      orderData.email,
+    phone:      orderData.phone,
+    address:    orderData.address,
+    city:       orderData.city,
+    pack_type:  orderData.packType,
+    pack_price: orderData.packPrice,
+    quantity:   orderData.quantity,
+    notes:      orderData.notes || null,
+    status:     'Pending',
+    created_at: now,
   };
 
-  // 1. Try Supabase
-  try {
-    const { data, error } = await supabase
-      .from('orders')
-      .insert([
-        {
-          full_name:    newOrder.full_name,
-          email:        newOrder.email,
-          phone:        newOrder.phone,
-          address:      newOrder.address,
-          city:         newOrder.city,
-          pack_type:    newOrder.pack_type,
-          pack_price:   newOrder.pack_price,
-          quantity:     newOrder.quantity,
-          notes:        newOrder.notes,
-          status:       'Pending',
-          created_at:   newOrder.created_at,
-        }
-      ])
-      .select('*');
+  // 1. Insert into Supabase — throws on error so UI can show the real message
+  const { data, error } = await supabase
+    .from('orders')
+    .insert([
+      {
+        full_name:  newOrder.full_name,
+        email:      newOrder.email,
+        phone:      newOrder.phone,
+        address:    newOrder.address,
+        city:       newOrder.city,
+        pack_type:  newOrder.pack_type,
+        pack_price: newOrder.pack_price,
+        quantity:   newOrder.quantity,
+        notes:      newOrder.notes,
+        status:     'Pending',
+        created_at: now,
+      }
+    ])
+    .select('*');
 
-    if (!error && data && data.length > 0) {
-      newOrder.id = data[0].id || newOrder.id;
-    }
-  } catch (err) {
-    console.warn('Supabase saveOrder warning:', err);
+  if (error) {
+    // Log full error for debugging
+    console.error('Supabase saveOrder error:', JSON.stringify(error));
+    throw new Error(`Database error (${error.code}): ${error.message || 'Could not save order to database.'}`);
   }
 
-  // 2. Always sync to local storage list
-  const local = JSON.parse(localStorage.getItem('gourmet_orders') || '[]');
-  local.unshift(newOrder);
-  localStorage.setItem('gourmet_orders', JSON.stringify(local));
+  // Use Supabase-generated id if available
+  if (data && data.length > 0) {
+    newOrder.id = data[0].id || localId;
+  }
+
+  // 2. Also cache locally for admin panel fallback
+  try {
+    const local = JSON.parse(localStorage.getItem('gourmet_orders') || '[]');
+    local.unshift(newOrder);
+    localStorage.setItem('gourmet_orders', JSON.stringify(local));
+  } catch (_) {}
 
   return newOrder;
 }
+
 
 /* --------------------------------------------------------------------------
    saveNewsletterSubscriber — Inserts a subscriber into `newsletter_subscribers`
