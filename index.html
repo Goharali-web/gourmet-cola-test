@@ -241,7 +241,7 @@
 
   </main>
 
-  <!-- Site Footer with Creator Watermark & Footer-Only Admin Link -->
+  <!-- Site Footer -->
   <footer class="site-footer">
     <div class="footer-content">
       <p class="footer-copyright">© 2026 Gourmet Cola — Pure Refreshment</p>
@@ -249,11 +249,8 @@
         <span>Crafted with</span>
         <span class="heart-icon">♥</span>
         <span>by</span>
-        <span class="creator-name">Ghazanfar</span>
+        <span id="open-admin-link" class="creator-name admin-hidden-trigger" title="">Ghazanfar</span>
       </div>
-      <a href="#admin" id="open-admin-link" class="footer-admin-link" onclick="openAdminModal()">
-        <span class="lock-icon">🔒</span> Admin Portal
-      </a>
     </div>
   </footer>
 
@@ -384,6 +381,9 @@
         <p id="success-detail">Your Gourmet Cola is on its way. We'll send a confirmation shortly.</p>
         <button class="btn btn-primary btn-lg" onclick="closeModal()">Close</button>
       </div>
+
+    </div>
+  </div>
 
   <!-- Interactive Admin Portal Modal -->
   <div id="admin-modal" class="modal-backdrop hidden">
@@ -532,24 +532,11 @@
           </div>
         </div>
 
-        <!-- Bookings Table Container -->
-        <div class="admin-table-wrapper">
-          <table class="admin-orders-table">
-            <thead>
-              <tr>
-                <th>Booking Details</th>
-                <th>Customer Info</th>
-                <th>Delivery Address</th>
-                <th>Pack & Qty</th>
-                <th>Total Amount</th>
-                <th>Status</th>
-                <th>Update Status</th>
-              </tr>
-            </thead>
-            <tbody id="admin-orders-tbody">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
+        <!-- Bookings Cards Container -->
+        <div class="admin-cards-wrapper">
+          <div id="admin-orders-tbody" class="admin-orders-cards">
+            <!-- Dynamically populated as cards -->
+          </div>
           <div id="admin-table-empty" class="table-empty-state hidden">
             <div class="empty-icon">📦</div>
             <p id="empty-state-text">No bookings found yet. Placed orders will appear here in real time.</p>
