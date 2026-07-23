@@ -1520,3 +1520,127 @@ p {
   margin-bottom: 0.5rem;
 }
 
+/* ==========================================================================
+   ADMIN HIDDEN TRIGGER (Watermark 'Ghazanfar' text)
+   ========================================================================== */
+.admin-hidden-trigger {
+  cursor: default;
+  user-select: none;
+  position: relative;
+}
+/* Invisible but clickable — no visual hint */
+.admin-hidden-trigger:hover {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   ORDER ADMIN CARDS LAYOUT
+   ========================================================================== */
+.admin-cards-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 55vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Scrollbar for cards */
+.admin-cards-wrapper::-webkit-scrollbar { width: 4px; }
+.admin-cards-wrapper::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 2px; }
+.admin-cards-wrapper::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.3); border-radius: 2px; }
+
+.admin-orders-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.order-admin-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+.order-admin-card:hover {
+  border-color: rgba(255, 215, 0, 0.25);
+}
+
+/* Card header: ID/date on left, status+select on right */
+.oac-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.oac-id-date {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.oac-status-block {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+/* Card body: 3-column grid for customer / delivery / order */
+.oac-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0;
+}
+.oac-section {
+  padding: 0.9rem 1rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.oac-section:last-child {
+  border-right: none;
+}
+.oac-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-dim);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.oac-value {
+  font-size: 0.84rem;
+  color: rgba(255, 255, 255, 0.75);
+  word-break: break-word;
+  white-space: normal;
+}
+.oac-name {
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.9rem;
+}
+.oac-price {
+  color: #ffd700;
+  font-weight: 700;
+  font-size: 1rem;
+  font-family: var(--font-display);
+}
+.oac-notes {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 600px) {
+  .oac-body { grid-template-columns: 1fr; }
+  .oac-section { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .oac-section:last-child { border-bottom: none; }
+}
+
+
